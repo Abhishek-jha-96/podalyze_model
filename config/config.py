@@ -22,9 +22,9 @@ class CFG:
     target             = f"Listening_Time_minutes"
     grouper            = f""
     tgt_mapper         = {}
-    ip_path            = f"/kaggle/input/playground-series-s5e4" # Change this to input path
-    op_path            = f"/kaggle/working" # Change this to output path
-    orig_path          = f"/kaggle/input/podcast-listening-time-prediction-dataset/podcast_dataset.csv" # Change this to original dataset path
+    ip_path            = f"data" # Change this to input path
+    op_path            = f"output" # Change this to output path
+    orig_path          = f"data" # Change this to original dataset path
     data_path          = f""
     dtl_preproc_req    = True
     ftre_plots_req     = True

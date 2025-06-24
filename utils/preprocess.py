@@ -2,7 +2,8 @@ from gc import collect
 import pandas as pd
 import os
 
-from PD_CV_LB_V1.config.config import CFG, cv_selector
+from config.config import CFG, cv_selector
+
 
 class Preprocessor():
     """
@@ -25,26 +26,16 @@ class Preprocessor():
         self.test_req          = CFG.test_req
         self.cv                = cv_selector[CFG.mdlcv_mthd]
          
-        self.original            = pd.read_csv(CFG.orig_path).drop_duplicates()
+        self.original            = pd.read_csv(os.path.join(CFG.orig_path, "podcast_dataset.csv")).drop_duplicates()
         self.original.index      = range(len(self.original))
         self.original.index.name = "id"    
         self.original            = self.original[self.train.columns]
 
-        self.sub_fl = pd.read_csv(os.path.join(CFG.ip_path, "sample_submission.csv"))
         print(f"Data shapes - train-test-original | {self.train.shape} {self.test.shape} {self.original.shape}")
         
         for tbl in [self.train, self.original, self.test]:
             obj_cols      = tbl.select_dtypes(include = ["object", "category"]).columns
             tbl.columns   = tbl.columns.str.replace(r"\(|\)|\.|\?|/|\s+","", regex = True)
-            
-    def _VisualizeDF(self):
-        "This method visualizes the heads for the train, test and original data"
-        
-        print(f"\nTrain set head")
-        
-        print(f"\nTest set head")
-        
-        print(f"\nOriginal set head")
               
     def _AddSourceCol(self):
         self.train['Source']    = "Competition"
@@ -91,9 +82,7 @@ class Preprocessor():
         return train
        
     def DoPreprocessing(self):
-        self._VisualizeDF()
         self._AddSourceCol()
-        self._CollateInfoDesc()
         self._CollateUnqNull()
         self.train = self._ConjoinTrainOrig()
 

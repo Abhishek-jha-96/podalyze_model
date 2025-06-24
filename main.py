@@ -1,22 +1,24 @@
+from email import utils
 from gc import collect
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import Pipeline
-import tqdm
+from tqdm import tqdm
 
-from PD_CV_LB_V1.config.config import CFG, Mdl_Master, cv_selector
-from PD_CV_LB_V1.helpers.helpers import make_ftre
-from PD_CV_LB_V1.train import ModelTrainer
-from PD_CV_LB_V1.utils import utils
-from PD_CV_LB_V1.utils.preprocess import Preprocessor
-from PD_CV_LB_V1.utils.utils import AdversarialCVMaker
+
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import TargetEncoder
 
+from config.config import CFG, Mdl_Master, cv_selector
+from helpers.helpers import make_ftre
+from train import ModelTrainer
+from utils.preprocess import Preprocessor
+from utils.utils import AdversarialCVMaker
+
 def preprocess_data():
     """Preprocess the data."""
-    pp = Preprocessor()
+    pp = Preprocessor() 
     pp.DoPreprocessing()
     return pp
 
@@ -66,7 +68,7 @@ def train_models(Xtrain, ytrain, ygrp, Xtest, cat_cols):
     FtreImp = {}
     drop_cols = ["Source", "id", "Id", "Label", CFG.target, "fold_nb"]
 
-    for method, mymodel in tqdm.tqdm(Mdl_Master.items()):
+    for method, mymodel in tqdm(Mdl_Master.items()):
         print(f"\n{'=' * 20} {method.upper()} MODEL TRAINING {'=' * 20}\n")
 
         md = ModelTrainer(

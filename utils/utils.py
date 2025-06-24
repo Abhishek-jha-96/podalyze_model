@@ -1,16 +1,14 @@
-from gc import collect
-from os import getpid
+import gc
+import os
+import platform
+import psutil
 import pandas as pd
-from psutil import Process
 from sklearn.base import clone
 from sklearn.metrics import roc_auc_score, root_mean_squared_error
 from lightgbm import LGBMClassifier as LGBMC
 from sklearn.model_selection import StratifiedKFold as SKF
 
-import ctypes
-
 import torch
-libc = ctypes.CDLL("libc.so.6")
 
 class Utils:
     """
@@ -30,19 +28,23 @@ class Utils:
         score = root_mean_squared_error(ytrue, ypred)
         return score
 
-    def CleanMemory(self):
-        "This method cleans the memory off unused objects and displays the cleaned state RAM usage"
+    def clean_memory():
+        "Cleans unused objects and reports RAM usage"
+        gc.collect()
 
-        collect();
-        libc.malloc_trim(0)
-        pid        = getpid()
-        py         = Process(pid)
-        memory_use = py.memory_info()[0] / 2. ** 30
-        return f"\nRAM usage = {memory_use :.4} GB"
+        # Only call malloc_trim on Linux
+        if platform.system() == "Linux":
+            import ctypes
+            libc = ctypes.CDLL("libc.so.6")
+            libc.malloc_trim(0)
+
+        process = psutil.Process(os.getpid())
+        memory_use = process.memory_info().rss / 2.**30  # in GB
+        return f"\nRAM usage = {memory_use:.4f} GB"
 
 
 utils = Utils()
-collect()
+gc.collect()
 print()
 
 class AdversarialCVMaker:
