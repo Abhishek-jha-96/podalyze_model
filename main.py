@@ -1,4 +1,3 @@
-from email import utils
 from gc import collect
 import numpy as np
 import pandas as pd
@@ -14,7 +13,7 @@ from config.config import CFG, Mdl_Master, cv_selector
 from helpers.helpers import make_ftre
 from train import ModelTrainer
 from utils.preprocess import Preprocessor
-from utils.utils import AdversarialCVMaker
+from utils.utils import AdversarialCVMaker, utils
 
 def preprocess_data():
     """Preprocess the data."""
@@ -112,7 +111,7 @@ def train_models(Xtrain, ytrain, ygrp, Xtest, cat_cols):
         print()
         collect()
 
-    _ = utils.CleanMemory()
+    _ = utils.clean_memory()
 
     return OOF_Preds, Mdl_Preds
 

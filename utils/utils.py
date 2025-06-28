@@ -28,7 +28,7 @@ class Utils:
         score = root_mean_squared_error(ytrue, ypred)
         return score
 
-    def clean_memory():
+    def clean_memory(self,):
         "Cleans unused objects and reports RAM usage"
         gc.collect()
 
